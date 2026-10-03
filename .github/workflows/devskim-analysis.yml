@@ -7,11 +7,11 @@ name: DevSkim
 
 on:
   push:
-    branches: [ master, development ]
-  pull_request:
-    branches: [ master, development ]
-  schedule:
-    - cron: '45 0 * * 4'
+    branches: ["a"]
+  # pull_request:
+    # branches: [ master, development ]
+  # schedule:
+    # - cron: '45 0 * * 4'
 
 jobs:
   lint:
