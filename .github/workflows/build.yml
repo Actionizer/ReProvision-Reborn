@@ -52,6 +52,13 @@ jobs:
       - name: List schemes
         run: xcodebuild -list -workspace "$WORKSPACE"
 
+      - name: Patch broken .tbd stubs (unknown platform fix)
+        run: |
+          find . -name '*.tbd' -not -path './Pods/*' -print0 \
+            | xargs -0 perl -pi -e 's/^(platform:\s+)ios\s*,\s*\S+\s*$/${1}ios\n/i'
+          echo "--- platform lines after patch ---"
+          grep -rn '^platform' --include='*.tbd' . --exclude-dir=Pods
+
       - name: Build (unsigned)
         run: |
           set -o pipefail
