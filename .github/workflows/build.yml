@@ -12,7 +12,7 @@ jobs:
 
     env:
       WORKSPACE: ReProvision.xcworkspace
-      SCHEME: ReProvision        # change after checking the "List schemes" step output
+      SCHEME: iOS        # change after checking the "List schemes" step output
       CONFIGURATION: Release
 
     steps:
@@ -37,7 +37,7 @@ jobs:
           cd "$RUNNER_TEMP/iOSOpenDev"
           ls -la
           # Run the repo's installer script here once you confirm its name:
-          # sudo ./install.sh
+          sudo ./install.sh
 
       - name: Cache Pods
         uses: actions/cache@v4
