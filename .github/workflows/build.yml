@@ -47,12 +47,16 @@ jobs:
       - name: List schemes
         run: xcodebuild -list -workspace "$WORKSPACE"
 
-      - name: Patch broken .tbd stubs (unknown platform fix)
+      - name: Patch broken .tbd stubs
         run: |
+          # 1) "platform: ios, macOS" -> "platform: ios" (new tapi can't parse the list)
           find . -name '*.tbd' -not -path './Pods/*' -print0 \
             | xargs -0 perl -pi -e 's/^(platform:\s+)ios\s*,\s*\S+\s*$/${1}ios\n/i'
-          echo "--- platform lines after patch ---"
-          grep -rn '^platform' --include='*.tbd' . --exclude-dir=Pods
+          # 2) drop x86_64 so the linker doesn't treat the stub as iOS-simulator
+          find . -name '*.tbd' -not -path './Pods/*' -print0 \
+            | xargs -0 perl -pi -e 's/,\s*x86_64\b//g if /archs:/'
+          echo "--- after patch ---"
+          grep -rn '^platform\|archs:' --include='*.tbd' . --exclude-dir=Pods | cut -c1-120
 
       - name: Build (unsigned)
         run: |
